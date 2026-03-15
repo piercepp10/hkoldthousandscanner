@@ -1,3 +1,28 @@
+
+import os
+import time
+import logging
+import requests
+import re
+from datetime import datetime, timedelta
+from bs4 import BeautifulSoup
+
+# 1. 解決 Undefined 'log': 設定 Log 記錄器
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
+log = logging.getLogger(name)
+
+# 2. 解決 Undefined 'TELEGRAM_TOKEN' 及 'os'
+# 喺 GitHub Actions 執行時，佢會去 Secrets 攞資料
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
+
+# 如果你係本機測試，可以暫時寫死佢 (正式上 GitHub 記得用返 os.getenv)
+# TELEGRAM_TOKEN = "你的TOKEN"
+
+
 # ═══════════════════════════════════════════════════════════
 # 📡  HKEx RSS 抓取與即時監控 (補完)
 # ═══════════════════════════════════════════════════════════
