@@ -1,9 +1,9 @@
-
 import os
 import time
 import logging
 import requests
 import re
+import schedule
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
@@ -12,7 +12,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s"
 )
-log = logging.getLogger(name)
+log = logging.getLogger(__name__)
 
 # 2. 解決 Undefined 'TELEGRAM_TOKEN' 及 'os'
 # 喺 GitHub Actions 執行時，佢會去 Secrets 攞資料
@@ -38,6 +38,37 @@ def get_processed_ids():
 def save_processed_id(ann_id):
     with open(PROCESSED_FILE, "a") as f:
         f.write(f"{ann_id}\n")
+
+def analyse_action(title, description, code):
+    """
+    Placeholder: Analyse financial action from title and description
+    Returns a dict with analysis results
+    """
+    return {
+        "type": "BUY",
+        "code": code,
+        "title": title,
+        "flags": []
+    }
+
+def enrich_with_ccass(action_res):
+    """
+    Placeholder: Enrich analysis with CCASS data
+    """
+    return {
+        "code": action_res.get("code", ""),
+        "type": action_res.get("type", ""),
+        "grade": "A",
+        "gradeLabel": "Strong Buy",
+        "final": "9/10",
+        "formula": "Strong Signals",
+        "buy_flags": ["Positive indicator 1", "Positive indicator 2"],
+        "trap_flags": ["Risk warning 1"],
+        "dry_desc": "CCASS dryness indicator",
+        "float_desc": "Float analysis",
+        "closest": "Similar case reference",
+        "action": "Suggested action based on analysis"
+    }
 
 def fetch_and_scan():
     """核心監控邏輯：抓取 -> 分析 -> 查CCASS -> 報料"""
@@ -112,7 +143,7 @@ def send_telegram_report(res, link):
 # 🚀  啟動
 # ═══════════════════════════════════════════════════════════
 
-if name == "main":
+if __name__ == "__main__":
     log.info("財技狙擊 Bot v5 正式啟動，正在監視老細動作...")
     # 立即執行一次
     fetch_and_scan()
